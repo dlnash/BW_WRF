@@ -36,7 +36,7 @@ cd $PBS_O_WORKDIR
 # To add certain modules that you do not have added via ~/.modules
 #. /opt/modules/default/init/bash
 #module load craype-hugepages2M  perftools
-module load JasPer/2.0.14-CrayGNU-2018.1
+module load JasPer/2.0.14-CrayGNU-2018.12
 module swap PrgEnv-gnu PrgEnv-cray
 
 module swap PrgEnv-cray PrgEnv-intel
