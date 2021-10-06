@@ -1,0 +1,13 @@
+## modifed by dlnash for wrf_real
+## original found at https://rda.ucar.edu/datasets/ds633.0/docs/ds633.0.e5.oper.an.pl.grib1.table.web.txt
+
+==========================================================================================================================
+GRIB1 (and netCDF4/HDF5) Table for 'ERA5 atmospheric pressure level analysis'   ('e5.oper.an.pl')
+      * 0.25 Degree Latitude-Longitude Grid *
+                                                                                        
+  ID   Table   Parameter  Name     Description                 Units                Suffix
+   4   128      129       z        Geopotential                m**2 s**-2             sc
+   5   128      130       t        Temperature                 K                      sc     
+  10   128      131       u        U component of wind         m s**-1                uv
+  11   128      132       v        V component of wind         m s**-1                uv
+  12   128      157       r        Relative humidity           %                      sc

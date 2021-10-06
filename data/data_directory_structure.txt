@@ -1,0 +1,36 @@
+## data directory structure for stashed WPS and WRF runs
+.
+└── <date>_case                 # directory containing data for run started on <date>
+│   ├── InputData
+        |--- namelist.wps               # input parameters for WPS
+        |--- namelist.input             # input parameters for real
+        |--- ERA5_sfc                   # contains gribbed surface ERA5 files required for running ungrib.exe
+        |--- ERA5_prs                   # contains gribbed pressure ERA5 files required for running ungrib.ex
+│   ├──IntermediateData
+        |---geogrid                     # contains resulting files from geogrid
+            |---geo_em.d0*.nc               # netCDF with domain topography information
+        |--- ungrib                     # contains ungribbed ERA5 prs and sfc files required for running metgrid.exe
+            |---ERA5_prs*                   
+            |---ERA5_sfc*
+        |--- metgrid                    # contains metgrid files required for running real.exe
+            |--- met_em.d*.nc               
+        |--- real                       # contains the output files from real.exe required to run wrf.exe
+                |--- wrfbdy_d01                 # used for solving equations of motion, cannot compute boundary or edges, uses a 5 pt buffer
+                |--- wrfinput_d*                # domain initial conditions from reanalysis
+                |--- wrflowinp_d*               # boundary layer conditions for inner and outer domains
+│   └── AnalysisData
+        |--- wrfout<domain><date>.nc    # final output of wrf.exe
+│   └── ErrOutput
+        |--- WPS
+            |--- geogrid.log*               # output logs from geogrid.exe
+            |--- ungrib.log*                # output logs from ungrib.exe
+            |--- metgrid.log*               # output logs from metgrid.exe
+        |--- WRF
+            |--- $PBS_JOBID
+                |--- rsl.error.*              # error output files from wrf.exe
+                |--- rsl.out.*
+        |--- REAL
+            |--- $PBS_JOBID
+                |--- rsl.error.*              # error output files from wrf.exe
+                |--- rsl.out.*
+└── ...
