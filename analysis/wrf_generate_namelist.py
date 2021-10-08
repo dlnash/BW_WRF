@@ -187,8 +187,8 @@ text_lst = ["&time_control" ,\
 " input_from_file                     = .true., .true.," ,\
 " history_interval                    = 180,    60," ,\
 " frames_per_outfile                  = 99999, 99999," ,\
-" auxinput1_inname = '/u/eot/dlnash/scratch/data/wrf/{0}_case/IntermediateData/metgrid/met_em.d<domain>.<date>',".format(case_name) ,\
-" history_outname='/u/eot/dlnash/scratch/data/wrf/{0}_case/AnalysisData/wrfout_d<domain>.<date>',".format(case_name) ,\
+" auxinput1_inname = '/u/eot/dlnash/scratch/data/wrf/{0}/IntermediateData/metgrid/met_em.d<domain>.<date>',".format(case_name) ,\
+" history_outname='/u/eot/dlnash/scratch/data/wrf/{0}/AnalysisData/wrfout_d<domain>.<date>',".format(case_name) ,\
 " adjust_output_times                 = .true.," ,\
 " restart                             = .false.," ,\
 " restart_interval                    =  720," ,\
@@ -205,7 +205,7 @@ text_lst = ["&time_control" ,\
 " debug_level                         = 0," ,\
 "/" ,\
 "" ,\
-"&domains"
+"&domains",\
 " time_step                           = 45," ,\
 " time_step_fract_num                 = 0," ,\
 " time_step_fract_den                 = 1," ,\
@@ -293,7 +293,7 @@ text_lst = ["&time_control" ,\
 " opt_stc  = 1," ,\
 "/" ,\
 "" ,\
-"&fdda"
+"&fdda",\
 " grid_fdda                           = 0,     0," ,\
 " gfdda_inname                        = 'wrffdda_d<domain>'," ,\
 " gfdda_end_h                         = 99999999, 4320," ,\
@@ -317,7 +317,7 @@ text_lst = ["&time_control" ,\
 " io_form_gfdda                       = 2," ,\
 "/" ,\
 "" ,\
-"&dynamics"
+"&dynamics",\
 " w_damping                           = 1," ,\
 " diff_opt                            = 2," ,\
 " km_opt                              = 4," ,\
