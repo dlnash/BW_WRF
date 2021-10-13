@@ -48,4 +48,4 @@ sed -i '/^DM_CC/s/mpicc/cc/g' configure.wrf
 echo "Compiling WRF..."
 ./compile em_real >& compile.log
 
-echo "Compilation Complete - use 'tail compile.log' to check if compiled correctly.
+echo "Compilation Complete - use 'tail compile.log' to check if compiled correctly."
