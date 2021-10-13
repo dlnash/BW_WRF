@@ -17,6 +17,7 @@ cd $WRF_DIR
 module swap PrgEnv-cray PrgEnv-pgi
 module load cray-netcdf
 export NETCDF=${NETCDF_DIR}
+export NETCDF_classic=1
 export WRFIO_NCD_LARGE_FILE_SUPPORT=1
 # also run this!
 export WRF_EM_CORE=1
@@ -29,7 +30,7 @@ module load craype-hugepages8M
 # There are a few things that need to be manually changed before building WRF on Blue Waters.  
 # When you run the configure script, you will be presented with several choices based on the compiler and type of parallelization desired
 # - choose the first of the PGI compiler options.
-echo "Running configure script. Choose option 43 and 1 during configuration"
+echo "Running configure script. Choose option 4 and 1 during configuration"
 ./configure
 
 # After running the configure script, a file called "configure.wrf" will be generated.  
