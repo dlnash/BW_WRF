@@ -7,6 +7,13 @@
 #
 ######################################################################
 
+# move to the WPS directory
+WPS_DIR="/u/eot/dlnash/scratch/WRF_WPS_build_4.3/WPS/"
+cd $WPS_DIR
+
+# make sure the directory is clean
+./clean
+
 # do this before loading any PrgEnv since it switches to PrgEnv-gnu
 module load JasPer/2.0.14-CrayGNU-2018.12
 module swap PrgEnv-gnu PrgEnv-cray
@@ -20,6 +27,11 @@ export WRFIO_NCD_LARGE_FILE_SUPPORT=1
 # JasPer and png libraries are only provided as a dynamic library, not static ones
 export CRAYPE_LINK_TYPE=dynamic
 export CRAY_ADD_RPATH=yes
+
+# need to load a newer version of gcc
+module load gcc/6.3.0
+# trying hugepages
+module load craype-hugepages8M
 
 # run configure
 ./configure

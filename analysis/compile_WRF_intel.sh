@@ -6,12 +6,22 @@
 # Directions: Run in the WRF_WPS_Build_<version>/WRF directory
 #
 ######################################################################
+# move to the WPS directory
+WRF_DIR="/u/eot/dlnash/scratch/WRF_WPS_build_4.3/WRF/"
+cd $WRF_DIR
+
+# make sure the directory is clean
+./clean
 
 # Configure your programming environment (the prefix "cray-" on the "netcdf" module name has nothing to do with which compiler is being used)
 module swap PrgEnv-cray PrgEnv-intel
 module load cray-netcdf
 export NETCDF=${NETCDF_DIR}
 export WRFIO_NCD_LARGE_FILE_SUPPORT=1
+# need to load a newer version of gcc
+module load gcc/6.3.0
+# trying hugepages
+module load craype-hugepages8M
 # also run this!
 export WRF_EM_CORE=1
 export J="-j 8"

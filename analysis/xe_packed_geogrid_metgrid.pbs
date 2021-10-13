@@ -1,7 +1,7 @@
 #!/bin/bash
 ### set the number of nodes
 ### set the number of PEs per node
-#PBS -l nodes=40:ppn=32:xe
+#PBS -l nodes=5:ppn=32:xe
 ### set the wallclock time
 #PBS -l walltime=03:30:00
 ### set the job name
@@ -33,17 +33,22 @@ cd $PBS_O_WORKDIR
 # cd /scratch/sciteam/$USER/$PBS_JOBID
 # cp /scratch/job/setup/directory/* .
 
-# To add certain modules that you do not have added via ~/.modules
-#. /opt/modules/default/init/bash
-#module load craype-hugepages2M  perftools
+## Load modules
+# do this before loading any PrgEnv since it switches to PrgEnv-gnu
 module load JasPer/2.0.14-CrayGNU-2018.12
 module swap PrgEnv-gnu PrgEnv-cray
 
-module swap PrgEnv-cray PrgEnv-intel
+# configure programming environment
+module swap PrgEnv-cray PrgEnv-pgi
 module load cray-netcdf
 export NETCDF=${NETCDF_DIR}
 export WRFIO_NCD_LARGE_FILE_SUPPORT=1
+# need to load a newer version of gcc
+module load gcc/6.3.0
+# trying hugepages
+module load craype-hugepages8M
 
+# JasPer and png libraries are only provided as a dynamic library, not static ones
 export CRAYPE_LINK_TYPE=dynamic
 export CRAY_ADD_RPATH=yes
 
@@ -53,7 +58,7 @@ export CRAY_ADD_RPATH=yes
 
 ### run geogrid
 echo "Running geogrid"
-aprun -n 1280 ./geogrid.exe
+aprun -n 160 ./geogrid.exe
 echo "Geogrid complete, cleaning up geogrid files..."
 
 ### check filesizes when complete
@@ -67,7 +72,7 @@ cp geo_em.d*.nc $DATA_DIR'IntermediateData/geogrid/'
 
 ### run metgrid
 echo "Running metgrid"
-aprun -n 1280 ./metgrid.exe
+aprun -n 160 ./metgrid.exe
 echo "Metgrid complete, cleaning up metgrid files..."
 
 ### check files
