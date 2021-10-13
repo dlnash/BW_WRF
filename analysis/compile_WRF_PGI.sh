@@ -15,9 +15,8 @@ cd $WRF_DIR
 
 # Configure your programming environment (the prefix "cray-" on the "netcdf" module name has nothing to do with which compiler is being used)
 module swap PrgEnv-cray PrgEnv-pgi
-module load cray-netcdf
+module load cray-netcdf-hdf5parallel/4.6.1.3
 export NETCDF=${NETCDF_DIR}
-export NETCDF_classic=1
 export WRFIO_NCD_LARGE_FILE_SUPPORT=1
 # also run this!
 export WRF_EM_CORE=1
