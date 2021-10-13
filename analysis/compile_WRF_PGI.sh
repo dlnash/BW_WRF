@@ -29,13 +29,14 @@ module load craype-hugepages8M
 # There are a few things that need to be manually changed before building WRF on Blue Waters.  
 # When you run the configure script, you will be presented with several choices based on the compiler and type of parallelization desired
 # - choose the first of the PGI compiler options.
-echo "Choose option 43 and 1 during configuration"
+echo "Running configure script. Choose option 43 and 1 during configuration"
 ./configure
 
 # After running the configure script, a file called "configure.wrf" will be generated.  
 # It may be necessary to edit this file, and manually change the names of the Fortran and C compilers
 # to "ftn" and "cc" (don't use "pgcc"), respectively. 
 # You can use these sed lines to affect the changes:
+echo "Updating configure file..."
 sed -i '/^SFC/s/pgf90/ftn/g' configure.wrf
 sed -i '/^DM_FC/s/mpif90/ftn/g' configure.wrf
 sed -i '/^SCC/s/pgcc/cc/g' configure.wrf
@@ -43,6 +44,7 @@ sed -i '/^CCOMP/s/pgcc/cc/g' configure.wrf
 sed -i '/^DM_CC/s/mpicc/cc/g' configure.wrf
 
 # compile WRF
+echo "Compiling WRF..."
 ./compile em_real >& compile.log
 
 echo "Compilation Complete - use 'tail compile.log' to check if compiled correctly.
