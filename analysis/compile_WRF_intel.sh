@@ -29,7 +29,7 @@ export J="-j 8"
 # There are a few things that need to be manually changed before building WRF on Blue Waters.  
 # When you run the configure script, you will be presented with several choices based on the compiler and type of parallelization desired
 # - choose the first of the Intel compiler options.
-echo "Choose option 16 and 1 during configuration"
+echo "Choose option 51 and 1 during configuration"
 ./configure
 
 # After running the configure script, a file called "configure.wrf" will be generated.  
