@@ -12,8 +12,8 @@
  parent_grid_ratio =   1, 3,
  i_parent_start    =   1, 247,
  j_parent_start    =   1, 62,
- e_we              = 927, 1855,
- e_sn              = 432, 928,
+ e_we              = , 1,
+ e_sn              = , ,
  geog_data_res     = 'default', 'default',
  dx = 9000,
  dy = 9000,
@@ -21,16 +21,16 @@
  ref_lat   =  32.5,
  ref_lon   =  77.5,
  truelat1  =  30.0,
- geog_data_path = '/u/eot/dlnash/data/geog'
+ geog_data_path = '/u/eot/dlnash/scratch/WRF_WPS_build_4.3/WPS_GEOG'
 /
 
 &ungrib
  out_format = 'WPS',
- prefix = '/u/eot/dlnash/scratch/data/wrf/20211006_case/IntermediateData/ungrib/ERA5_sfc',
+ prefix = '/u/eot/dlnash/scratch/data/wrf/20211022_case/IntermediateData/ungrib/ERA5_sfc',
 /
 
 &metgrid
- fg_name = '/u/eot/dlnash/scratch/data/wrf/20211006_case/IntermediateData/ungrib/ERA5_prs','/u/eot/dlnash/scratch/data/wrf/20211006_case/IntermediateData/ungrib/ERA5_sfc',
- opt_output_from_metgrid_path = '/u/eot/dlnash/scratch/data/wrf/20211006_case/IntermediateData/metgrid/',
+ fg_name = '/u/eot/dlnash/scratch/data/wrf/20211022_case/IntermediateData/ungrib/ERA5_prs','/u/eot/dlnash/scratch/data/wrf/20211022_case/IntermediateData/ungrib/ERA5_sfc',
+ opt_output_from_metgrid_path = '/u/eot/dlnash/scratch/data/wrf/20211022_case/IntermediateData/metgrid/',
  io_form_metgrid = 2, 
 /

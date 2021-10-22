@@ -66,13 +66,13 @@ end_items = []
 date_fmt = ['%Y', '%m', '%d', '%H']
 for i, dfmt in enumerate(date_fmt):
     start = dt_start.strftime(dfmt)
-    start = list(itertools.repeat(int(start), ndom))
-    start = str(start)[1:-1]
+#     start = list(itertools.repeat(int(start), ndom))
+#     start = str(start)[1:-1]
     start_items.append(start)
     
     end = dt_end.strftime(dfmt)
-    end = list(itertools.repeat(int(end), ndom))
-    end = str(end)[1:-1]
+#     end = list(itertools.repeat(int(end), ndom))
+#     end = str(end)[1:-1]
     end_items.append(end)
 
 ## id and grid info for domains
@@ -103,6 +103,9 @@ geog_data_res = str(geog_data_res)[1:-1]
 # the resolution in meters (e.g. 27000 m = 27 km)
 dx = str(resolutions[0]*1000)
 dy = str(resolutions[0]*1000)
+
+# time_step should be no more than child domain dx*6
+time_step = resolutions[1]*6
 
 # the type of map projection
 map_proj = 'mercator'
@@ -138,7 +141,7 @@ text_lst = ["&share" , \
 " ref_lon   =  {0},".format(ref_lon) ,\
 " truelat1  =  30.0," ,\
 
-" geog_data_path = '/u/eot/dlnash/data/geog'" ,\
+" geog_data_path = '/u/eot/dlnash/scratch/WRF_WPS_build_4.3/WPS_GEOG'" ,\
 "/" ,\
 "" ,\
 "&ungrib" ,\
@@ -171,16 +174,16 @@ text_lst = ["&time_control" ,\
 " run_hours                           = 0," ,\
 " run_minutes                         = 0," ,\
 " run_seconds                         = 0," ,\
-" start_year                          = {0},".format(start_items[0]) ,\
-" start_month                         = {0},".format(start_items[1]) ,\
-" start_day                           = {0},".format(start_items[2]) ,\
-" start_hour                          = {0},".format(start_items[3]) ,\
+" start_year                          = {0}, {0},".format(start_items[0]) ,\
+" start_month                         = {0}, {0},".format(start_items[1]) ,\
+" start_day                           = {0}, {0},".format(start_items[2]) ,\
+" start_hour                          = {0}, {0},".format(start_items[3]) ,\
 " start_minute                        = 00,    00," ,\
 " start_second                        = 00,    00," ,\
-" end_year                            = {0},".format(end_items[0]) ,\
-" end_month                           = {0},".format(end_items[1]) ,\
-" end_day                             = {0},".format(end_items[2]) ,\
-" end_hour                            = {0},".format(end_items[3]) ,\
+" end_year                            = {0}, {0},".format(end_items[0]) ,\
+" end_month                           = {0}, {0},".format(end_items[1]) ,\
+" end_day                             = {0}, {0},".format(end_items[2]) ,\
+" end_hour                            = {0}, {0},".format(end_items[3]) ,\
 " end_minute                          = 00,    00," ,\
 " end_second                          = 00,    00," ,\
 " interval_seconds                    = {0},".format(timestep*3600) ,\
@@ -206,7 +209,7 @@ text_lst = ["&time_control" ,\
 "/" ,\
 "" ,\
 "&domains",\
-" time_step                           = 45," ,\
+" time_step                           = {0},".format(time_step) ,\
 " time_step_fract_num                 = 0," ,\
 " time_step_fract_den                 = 1," ,\
 " max_dom                             = {0},".format(ndom) ,\

@@ -12,7 +12,7 @@ WPS_DIR="/u/eot/dlnash/scratch/WRF_WPS_build_4.3/WPS/"
 cd $WPS_DIR
 
 # make sure the directory is clean
-./clean
+./clean -a
 
 # do this before loading any PrgEnv since it switches to PrgEnv-gnu
 module load JasPer/2.0.14-CrayGNU-2018.12

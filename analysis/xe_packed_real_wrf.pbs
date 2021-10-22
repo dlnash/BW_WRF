@@ -3,7 +3,7 @@
 ### set the number of PEs per node
 #PBS -l nodes=160:ppn=32:xe
 ### set the wallclock time
-#PBS -l walltime=15:00:00
+#PBS -l walltime=05:00:00
 ### set the job name
 #PBS -N real_wrf.test.nash
 ### set the job stdout and stderr
@@ -39,10 +39,12 @@ module swap PrgEnv-cray PrgEnv-pgi
 module load cray-netcdf
 export NETCDF=${NETCDF_DIR}
 export WRFIO_NCD_LARGE_FILE_SUPPORT=1
-# need to load a newer version of gcc
-module load gcc/6.3.0
 # trying hugepages
 module load craype-hugepages8M
+# these two stack settings are essential for use with Intel-compiled code
+ulimit -s unlimited
+export OMP_STACKSIZE=2G
+
 
 ### launch the application
 ### redirecting stdin and stdout if needed
@@ -50,23 +52,23 @@ module load craype-hugepages8M
 ################
 ### RUN REAL ###
 ################
-echo "Running real..."
-aprun -n 1280 -N 8 -d 4 ./real.exe
+# echo "Running real..."
+# aprun -n 1280 -N 8 -d 4 ./real.exe
 
-## Clean up files
-echo "Real complete, cleaning up files..."
+# ## Clean up files
+# echo "Real complete, cleaning up files..."
 
 # Copy real results to stash directory
 DATA_DIR='/u/eot/dlnash/scratch/data/wrf/20211006_case/'
-INTDIR_NAME=$DATA_DIR'IntermediateData/real/'
-cp wrfbdy_d01 $INTDIR_NAME
-cp wrfinput_d* $INTDIR_NAME
-cp wrflowinp_d* $INTDIR_NAME
+# INTDIR_NAME=$DATA_DIR'IntermediateData/real/'
+# cp wrfbdy_d01 $INTDIR_NAME
+# cp wrfinput_d* $INTDIR_NAME
+# cp wrflowinp_d* $INTDIR_NAME
 
-### Make error directory and move error files
-ERRDIR_NAME=$DATA_DIR'ErrOutput/REAL/'$PBS_JOBID
-mkdir $ERRDIR_NAME
-mv rsl* $ERRDIR_NAME
+# ### Make error directory and move error files
+# ERRDIR_NAME=$DATA_DIR'ErrOutput/REAL/'$PBS_JOBID
+# mkdir $ERRDIR_NAME
+# mv rsl* $ERRDIR_NAME
 
 
 ###############

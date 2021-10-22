@@ -4,23 +4,23 @@
  run_minutes                         = 0,
  run_seconds                         = 0,
  start_year                          = 2010, 2010,
- start_month                         = 2, 2,
- start_day                           = 5, 5,
- start_hour                          = 0, 0,
+ start_month                         = 02, 02,
+ start_day                           = 05, 05,
+ start_hour                          = 00, 00,
  start_minute                        = 00,    00,
  start_second                        = 00,    00,
  end_year                            = 2010, 2010,
- end_month                           = 2, 2,
- end_day                             = 9, 9,
- end_hour                            = 0, 0,
+ end_month                           = 02, 02,
+ end_day                             = 09, 09,
+ end_hour                            = 00, 00,
  end_minute                          = 00,    00,
  end_second                          = 00,    00,
  interval_seconds                    = 3600,
  input_from_file                     = .true., .true.,
  history_interval                    = 180,    60,
  frames_per_outfile                  = 99999, 99999,
- auxinput1_inname = '/u/eot/dlnash/scratch/data/wrf/20211006_case_case/IntermediateData/metgrid/met_em.d<domain>.<date>',
- history_outname='/u/eot/dlnash/scratch/data/wrf/20211006_case_case/AnalysisData/wrfout_d<domain>.<date>',
+ auxinput1_inname = '/u/eot/dlnash/scratch/data/wrf/20211022_case/IntermediateData/metgrid/met_em.d<domain>.<date>',
+ history_outname='/u/eot/dlnash/scratch/data/wrf/20211022_case/AnalysisData/wrfout_d<domain>.<date>',
  adjust_output_times                 = .true.,
  restart                             = .false.,
  restart_interval                    =  720,
@@ -37,12 +37,13 @@
  debug_level                         = 0,
 /
 
-&domains time_step                           = 45,
+&domains
+ time_step                           = 45,
  time_step_fract_num                 = 0,
  time_step_fract_den                 = 1,
  max_dom                             = 2,
- e_we                                = 927, 1855,
- e_sn                                = 432, 928,
+ e_we                                = , 1,
+ e_sn                                = , ,
  e_vert                              =  55,    55,
  p_top_requested                     = 5000,
  num_metgrid_levels                  = 38,
@@ -124,7 +125,8 @@
  opt_stc  = 1,
 /
 
-&fdda grid_fdda                           = 0,     0,
+&fdda
+ grid_fdda                           = 0,     0,
  gfdda_inname                        = 'wrffdda_d<domain>',
  gfdda_end_h                         = 99999999, 4320,
  gfdda_interval_m                    = 360,   360,
@@ -147,7 +149,8 @@
  io_form_gfdda                       = 2,
 /
 
-&dynamics w_damping                           = 1,
+&dynamics
+ w_damping                           = 1,
  diff_opt                            = 2,
  km_opt                              = 4,
  hybrid_opt                          = 0,
