@@ -8,6 +8,7 @@
 ######################################################################
 # move to the WPS directory
 WRF_DIR="/u/eot/dlnash/scratch/WRF_WPS_build_4.3/WRF/"
+#WRF_DIR="/u/eot/dlnash/scratch/WRF_WPS_build_4.2/WRF-4.2.2/"
 cd $WRF_DIR
 
 # make sure the directory is clean
@@ -46,4 +47,4 @@ sed -i '/^DM_CC/s/mpicc/cc/g' configure.wrf
 # compile WRF
 ./compile em_real >& compile.log
 
-echo "Compilation Complete - use 'tail compile.log' to check if compiled correctly.
+echo "Compilation Complete - use 'tail compile.log' to check if compiled correctly."

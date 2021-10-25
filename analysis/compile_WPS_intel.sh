@@ -9,6 +9,7 @@
 
 # move to the WPS directory
 WPS_DIR="/u/eot/dlnash/scratch/WRF_WPS_build_4.3/WPS/"
+#WPS_DIR="/u/eot/dlnash/scratch/WRF_WPS_build_4.2/WPS/"
 cd $WPS_DIR
 
 # make sure the directory is clean
