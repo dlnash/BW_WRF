@@ -47,4 +47,8 @@ sed -i '/^DM_CC/s/mpicc/cc/g' configure.wrf
 # compile WRF
 ./compile em_real >& compile.log
 
+<<<<<<< HEAD
 echo "Compilation Complete - use 'tail compile.log' to check if compiled correctly.
+=======
+echo "Compilation Complete - use 'tail compile.log' to check if compiled correctly."
+>>>>>>> refs/remotes/origin/master
