@@ -8,17 +8,21 @@ Description: Create .txt file with list of filenames for prs and sfc files to do
 
 import pandas as pd
 import calendar
+import yaml
 
-start_date = input("Enter start date (format='YYYY-MM-DD HH:SS'):")
-print("Start date is: " + start_date)
+## update the name of the case from the dict file
+case_name='feb2010_expand'
 
-end_date = input("Enter end date (format='YYYY-MM-DD HH:SS'):")
-print("End date is: " + end_date)
+# import configuration file for case dictionary choice
+yaml_doc = '../data/wrf_casestudy.yml'
+config = yaml.load(open(yaml_doc), Loader=yaml.SafeLoader)
+case_dict = config[case_name]
 
-# start_date = '2010-02-05 00:00'
-# end_date = '2010-02-09 00:00'
+# read variables from config file
+start_date = case_dict['start_date']
+end_date = case_dict['end_date']
 
-dates = pd.date_range(start=start_date, end=end_date)
+dates = pd.date_range(start=start_date[:10], end=end_date[:10])
 
 ## PRS Files
 

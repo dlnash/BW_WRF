@@ -1,16 +1,35 @@
 #!/bin/bash
-######################################################################
-# Filename:    globus_ungrib.sh
+#############################################################################
+# Filename:    preprocess_WPS.sh
 # Author:      Deanna Nash dlnash@ucsb.edu
-# Description: Script to download ERA5 grib files for WRF real simulations
+# Description: Script to complete preprocessing tasks to be able to run WPS
 #
-######################################################################
-CASE_DATE="date +%Y_%b_%d"
-CASE_NAME="${CASE_DATE}_case"
-
-## load python module that has globus installed
+#############################################################################
+## load python module
 module load bwpy/2.0.2
 
+### Step 1: Create Case Name for current run
+CASE_DATE="date +%Y_%b_%d"
+CASE_NAME="${CASE_DATE}_case"
+echo "Beginning preparations for ${CASE_NAME}..."
+
+### Step 2: Create Directory Structure
+cd ~/DATA_WRF/
+
+mkdir -p ${CASE_NAME}/{InputData/{ERA5_sfc,ERA5_prs},IntermediateData/{geogrid,ungrib,metgrid,real},AnalysisData,ErrOutput/{WPS,WRF,REAL}}
+
+### Step 3: Generate namelist.wps and namelist.input
+python wrf_generate_namelist.py
+
+# copy namelist.input and namelist.wps to Directory Stash
+cp ../out/namelist.input ~/DATA_WRF/${CASE_NAME}/
+cp ../out/namelist.wps ~/DATA_WRF/${CASE_NAME}/
+# copy namelist.wps to WPS directory
+cp ../out/namelist.wps ~/WPS_4.2/
+# copy namelist.input to WRF directory
+cp ../out/namelist.input ~/WRF_4.2/
+
+### Step 4: Download .grb files using globus and run ungrib
 # Run era5_grb_filenames.py to write list of filenames (both prs and sfc files) to txt file
 python era5_grb_filenames.py
 ## TODO get year and month from wrf_casestudy.yml
@@ -25,6 +44,7 @@ for i in `cat era5_sfc_filenames.txt `
       echo "$i $i"
   done > era5_sfc_filenames_src_dest.txt
 
+echo "Filename list created, preparing to download .grb files..."
 ## login to globus
 globus login 
 
@@ -35,8 +55,6 @@ globus login
 ## click on URL
 ## activate endpoint (only activates for 10 days at a time)
 ## can also activate by going on globus app and clicking endpoints-ncsa-activate
-
-
 
 ## NCAR/UCAR Research Data Archive endpoint
 ep1=1e128d3c-852d-11e8-9546-0a6d4e044368
@@ -88,42 +106,3 @@ if [ $? -eq 0 ]; then
 else
     echo "$task_id failed!";
 fi
-
-##################
-### RUN UNGRIB ###
-##################
-## switch to WPS directory
-cd /u/eot/dlnash/scratch/WRF_WPS_build_4.2/WPS-4.2/
-
-### Run for SFC Files ###
-## Step 1: Modify namelist.wps
-## do not need to do this for sfc files as the file already has the right path
-
-## Step 2: Run link_grib.csh to link the grb sfc files to the current directory
-./link_grib.csh /u/eot/dlnash/scratch/data/wrf/${CASE_NAME}/InputData/ERA5_sfc/* 
-
-## Step 3: Run ungrib
-./ungrib.exe ## do we need to make this an aprun?
-
-## Step 4: Clean up tmp files
-rm GRIB*
-
-echo "Surface files ungribbed"
-
-### Run for PRS Files ###
-
-## Step 1: Modify namelist.wps
-## change prefix to indicate you are now processing prs files
-sed 's/ERA5_sfc/ERA5_prs/1' namelist.wps
-
-## Step 2: Run link_grib.csh to link the grb prs files to the current directory
-./link_grib.csh /u/eot/dlnash/scratch/data/wrf/${CASE_NAME}/InputData/ERA5_prs/* 
-
-## Step 3: Run ungrib
-./ungrib.exe ## do we need to make this an aprun?
-
-## Step 4: Clean up tmp files
-rm GRIB*
-
-echo "Pressure files ungribbed"
-

@@ -21,7 +21,7 @@ path_to_out  = '../out/'       # output files (numerical results, intermediate d
 path_to_figs = '../figs/'      # figures
 
 ## update the name of the case from the dict file
-case_name='feb2010_benchmark'
+case_name='feb2010_expand'
 
 # import configuration file for case dictionary choice
 yaml_doc = '../data/wrf_casestudy.yml'
@@ -41,6 +41,7 @@ e_we, e_sn, ref_lat, ref_lon = calc_gridpoints_domain(domains, resolutions, pare
 i_prt, j_prt = calc_i_j_parent_start(domains, resolutions)
 
 max_nodes = calc_number_nodes_pes(int(e_we[0]), int(e_sn[0]))
+## TODO make this a bash variable
 print('Max nodes is', max_nodes)
 
 ### vars for namelist.wps and namelist.input
@@ -105,7 +106,7 @@ dx = str(resolutions[0]*1000)
 dy = str(resolutions[0]*1000)
 
 # time_step should be no more than child domain dx*6
-time_step = resolutions[1]*6
+time_step = resolutions[0]*6
 
 # the type of map projection
 map_proj = 'mercator'
