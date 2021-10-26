@@ -7,7 +7,8 @@
 #
 ######################################################################
 # move to the WPS directory
-WRF_DIR="/u/eot/dlnash/scratch/WRF_WPS_build_4.3/WRF/"
+#WRF_DIR="/u/eot/dlnash/scratch/WRF_WPS_build_4.3/WRF/"
+WRF_DIR="/u/eot/dlnash/scratch/WRF_WPS_build_4.2/WRF-4.2.2/"
 cd $WRF_DIR
 
 # make sure the directory is clean

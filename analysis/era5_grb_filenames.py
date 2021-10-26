@@ -23,7 +23,7 @@ dates = pd.date_range(start=start_date, end=end_date)
 ## PRS Files
 
 ## get the dictionary of filename conventions
-fname = 'ds633.0.e5.oper.an.pl.grib1.table.txt'          
+fname = '../data/ds633.0.e5.oper.an.pl.grib1.table.txt'          
 df = pd.read_csv(fname, skiprows=range(0, 7), delimiter=r"\s{2,}", engine='python', dtype={'Parameter': object})
 prs_dict = df.to_dict(orient='index')
 
@@ -47,7 +47,7 @@ for key in prs_dict:
 ## SFC Files
 
 ## get the dictionary of filename conventions
-fname = 'ds633.0.e5.oper.an.sfc.grib1.table.txt'          
+fname = '../data/ds633.0.e5.oper.an.sfc.grib1.table.txt'          
 df = pd.read_csv(fname, skiprows=range(0, 8), delimiter=r"\s{2,}", engine='python', dtype={'Parameter': object})
 sfc_dict = df.to_dict(orient='index')
 

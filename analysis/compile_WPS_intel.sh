@@ -8,12 +8,15 @@
 ######################################################################
 
 # move to the WPS directory
-WPS_DIR="/u/eot/dlnash/scratch/WRF_WPS_build_4.3/WPS/"
+#WPS_DIR="/u/eot/dlnash/scratch/WRF_WPS_build_4.3/WPS/"
+WPS_DIR="/u/eot/dlnash/scratch/WRF_WPS_build_4.2/WPS-4.2/"
 cd $WPS_DIR
 
 # make sure the directory is clean
+echo "cleaning WPS directory"
 ./clean -a
 
+echo "Loading modules..."
 # do this before loading any PrgEnv since it switches to PrgEnv-gnu
 module load JasPer/2.0.14-CrayGNU-2018.12
 module swap PrgEnv-gnu PrgEnv-cray
@@ -28,16 +31,19 @@ export WRFIO_NCD_LARGE_FILE_SUPPORT=1
 export CRAYPE_LINK_TYPE=dynamic
 export CRAY_ADD_RPATH=yes
 
-# need to load a newer version of gcc
-module load gcc/6.3.0
 # trying hugepages
 module load craype-hugepages8M
 
+# set WRF_DIR
+WRF_DIR="/u/eot/dlnash/scratch/WRF_WPS_build_4.2/WRF-4.2.2"
+export WRF_DIR=${WRF_DIR}
+
+echo "Configuring WPS. Choose option 39."
 # run configure
 ./configure
 
 # Choose option 39
-
+echo "Editing configure files."
 # have to hack configure.wps to use Cray Wrappers
 # here intel compilers are used but similar changes are required for 
 # GNU, and PGI compilers
@@ -59,6 +65,7 @@ sed -i '/^CPPFLAGS/s/$/ -fopenmp/g' configure.wps
 # (optional) ensure that libjasper is found at runtime
 sed -i "/^COMPRESSION_LIBS/s#-ljasper#-Wl,--rpath,$EBROOTJASPER/lib64 -ljasper#" configure.wps
 
+echo "Compiling WPS..."
 # to compile WPS
 ./compile >& log.compile
 

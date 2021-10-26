@@ -44,7 +44,7 @@ ep2=d59900ef-6d04-11e5-ba46-22000b92c6ec
 ## PRESSURE LEVEL FILES ##
 ##########################
 run1_path=/ds633.0/e5.oper.an.pl/$YR$MON/
-dest1_path=/u/eot/dlnash/scratch/data/wrf/20210928_case/InputData/ERA5_prs/
+dest1_path=/u/eot/dlnash/scratch/data/wrf/20210903_case/InputData/ERA5_prs/
 
 SRC=$ep1:$run1_path
 echo $SRC
@@ -67,7 +67,7 @@ fi
 ## SURFACE LEVEL FILES ##
 #########################
 run2_path=/ds633.0/e5.oper.an.sfc/$YR$MON/
-dest2_path=/u/eot/dlnash/scratch/data/wrf/20210928_case/InputData/ERA5_sfc/
+dest2_path=/u/eot/dlnash/scratch/data/wrf/20210903_case/InputData/ERA5_sfc/
 
 SRC=$ep1:$run2_path
 echo $SRC
@@ -90,14 +90,14 @@ fi
 ### RUN UNGRIB ###
 ##################
 ## switch to WPS directory
-cd /u/eot/dlnash/scratch/WRF_WPS_build_4.3/WPS
+cd /u/eot/dlnash/scratch/WRF_WPS_build_4.2/WPS-4.2/
 
 ### Run for SFC Files ###
 ## Step 1: Modify namelist.wps
 ## do not need to do this for sfc files as the file already has the right path
 
 ## Step 2: Run link_grib.csh to link the grb sfc files to the current directory
-./link_grib.csh /u/eot/dlnash/scratch/data/wrf/20210928_case/InputData/ERA5_sfc/* 
+./link_grib.csh /u/eot/dlnash/scratch/data/wrf/20210903_case/InputData/ERA5_sfc/* 
 
 ## Step 3: Run ungrib
 ./ungrib.exe ## do we need to make this an aprun?
@@ -114,7 +114,7 @@ echo "Surface files ungribbed"
 sed 's/ERA5_sfc/ERA5_prs/1' namelist.wps
 
 ## Step 2: Run link_grib.csh to link the grb prs files to the current directory
-./link_grib.csh /u/eot/dlnash/scratch/data/wrf/20210928_case/InputData/ERA5_prs/* 
+./link_grib.csh /u/eot/dlnash/scratch/data/wrf/20210903_case/InputData/ERA5_prs/* 
 
 ## Step 3: Run ungrib
 ./ungrib.exe ## do we need to make this an aprun?
