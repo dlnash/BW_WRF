@@ -19,6 +19,9 @@ cd ~/DATA_WRF/
 mkdir -p ${CASE_NAME}/{InputData/{ERA5_sfc,ERA5_prs},IntermediateData/{geogrid,ungrib,metgrid,real},AnalysisData,ErrOutput/{WPS,WRF,REAL}}
 
 ### Step 3: Generate namelist.wps and namelist.input
+# switch to BW repo directory
+cd ~/repos/BW_WRF/analysis/
+# run script to generate namelists
 python wrf_generate_namelist.py
 
 # copy namelist.input and namelist.wps to Directory Stash
