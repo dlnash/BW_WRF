@@ -6,10 +6,10 @@
 #
 #############################################################################
 ## load python module
-module load bwpy/2.0.2
+##module load bwpy/2.0.2
 
 ### Step 1: Create Case Name for current run
-CASE_DATE="date +%Y_%b_%d"
+CASE_DATE=`date +%Y%m%d`
 CASE_NAME="${CASE_DATE}_case"
 echo "Beginning preparations for ${CASE_NAME}..."
 
