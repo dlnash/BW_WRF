@@ -70,3 +70,16 @@ echo "Compiling WPS..."
 ./compile >& log.compile
 
 echo "Compilation Complete - use 'tail log.compile' to check if compiled correctly."
+
+### Link Tables
+echo "Linking appropriate tables..."
+# in WPS directory
+ln -sf ungrib/Variable_Tables/Vtable.ERA-interim.pl Vtable
+
+# in WPS/geogrid/ directory
+cd geogrid/
+ln -sf GEOGRID.TBL.ARW GEOGRID.TBL
+
+# in WPS/metgrid directory
+cd ../metgrid/
+ln -sf METGRID.TBL.ARW METGRID.TBL
