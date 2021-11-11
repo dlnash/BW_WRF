@@ -53,7 +53,6 @@ globus login
 
 ## you may need to login via chrome and paste in activation code?
 ## activate the blue waters endpoint - do I need to do this every time?
-# globus endpoint activate --web d59900ef-6d04-11e5-ba46-22000b92c6ec
 
 ## click on URL
 ## activate endpoint (only activates for 10 days at a time)
@@ -63,6 +62,8 @@ globus login
 ep1=1e128d3c-852d-11e8-9546-0a6d4e044368
 ## NCSA endpoint
 ep2=d59900ef-6d04-11e5-ba46-22000b92c6ec
+
+#globus endpoint activate --web $ep2
 
 ##########################
 ## PRESSURE LEVEL FILES ##
@@ -75,17 +76,17 @@ echo $SRC
 DEST=$ep2:$dest1_path
 echo $DEST
 
-# globus transfer --batch $ep1:$run1_path $ep2:$dest1_path < era5_prs_filenames_prs_dest.txt
+globus transfer --batch $ep1:$run1_path $ep2:$dest1_path < era5_prs_filenames_src_dest.txt
 
-task_id="$(globus transfer $ep1:$run1_path $ep2:$dest1_path     --jmespath 'task_id' --format=UNIX     --batch era5_prs_filenames_prs_dest.txt)"
+#task_id="$(globus transfer $ep1:$run1_path $ep2:$dest1_path     --jmespath 'task_id' --format=UNIX     --batch era5_prs_filenames_prs_dest.txt)"
 
-echo "Waiting on 'globus transfer' task '$task_id'"
-globus task wait "$task_id" --timeout 90
-if [ $? -eq 0 ]; then
-    echo "$task_id completed successfully";
-else
-    echo "$task_id failed!";
-fi
+#echo "Waiting on 'globus transfer' task '$task_id'"
+#globus task wait "$task_id" --timeout 90
+#if [ $? -eq 0 ]; then
+#    echo "$task_id completed successfully";
+#else
+#    echo "$task_id failed!";
+#fi
 
 #########################
 ## SURFACE LEVEL FILES ##
@@ -98,14 +99,14 @@ echo $SRC
 DEST=$ep2:$dest2_path
 echo $DEST
 
-# globus transfer --batch $ep1:$run2_path $ep2:$dest2_path < era5_sfc_filenames_src_dest.txt
+globus transfer --batch $ep1:$run2_path $ep2:$dest2_path < era5_sfc_filenames_src_dest.txt
 
-task_id="$(globus transfer $ep1:$run2_path $ep2:$dest2_path     --jmespath 'task_id' --format=UNIX     --batch era5_sfc_filenames_src_dest.txt)"
+#task_id="$(globus transfer $ep1:$run2_path $ep2:$dest2_path     --jmespath 'task_id' --format=UNIX     --batch era5_sfc_filenames_src_dest.txt)"
 
-echo "Waiting on 'globus transfer' task '$task_id'"
-globus task wait "$task_id" --timeout 90
-if [ $? -eq 0 ]; then
-    echo "$task_id completed successfully";
-else
-    echo "$task_id failed!";
-fi
+#echo "Waiting on 'globus transfer' task '$task_id'"
+#globus task wait "$task_id" --timeout 90
+#if [ $? -eq 0 ]; then
+#    echo "$task_id completed successfully";
+#else
+#    echo "$task_id failed!";
+#fi
