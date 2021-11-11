@@ -35,7 +35,7 @@ echo "Surface files ungribbed"
 sed 's/ERA5_sfc/ERA5_prs/1' namelist.wps
 
 ## Step 2: Run link_grib.csh to link the grb prs files to the current directory
-./link_grib.csh /u/eot/dlnash/scratch/data/wrf/${CASE_NAME}/InputData/ERA5_prs/* 
+./link_grib.csh /u/eot/dlnash/scratch/data/wrf/${CASE_NAME}/InputData/ERA5_prs/*
 
 ## Step 3: Run ungrib
 ./ungrib.exe ## do we need to make this an aprun?
