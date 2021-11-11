@@ -35,7 +35,7 @@ feb2010_expand:
     month: feb
     start_date: '2010-02-03_00:00:00'
     end_date: '2010-02-09_00:00:00'
-    domains: [[40, 115, 15, 55], [60, 110, 20, 45]]
+    domains: [[40, 115, 15, 55], [58, 110, 20, 45]]
     resolutions: [9, 3]
     timestep: 1 # in hours
     wrf_files: ["/home/hasia/2009/wrfout_d02_2010-02-04_03:00:00"]
