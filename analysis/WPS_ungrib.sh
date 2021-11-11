@@ -53,15 +53,15 @@ echo "Surface files ungribbed"
 
 ## Step 1: Modify namelist.wps
 ## change prefix to indicate you are now processing prs files
-sed 's/ERA5_sfc/ERA5_prs/1' namelist.wps
+#sed 's/ERA5_sfc/ERA5_prs/1' namelist.wps
 
 ## Step 2: Run link_grib.csh to link the grb prs files to the current directory
-./link_grib.csh /u/eot/dlnash/scratch/data/wrf/${CASE_NAME}/InputData/ERA5_prs/* 
+#./link_grib.csh /u/eot/dlnash/scratch/data/wrf/${CASE_NAME}/InputData/ERA5_prs/* 
 
 ## Step 3: Run ungrib
-./ungrib.exe ## do we need to make this an aprun?
+#./ungrib.exe ## do we need to make this an aprun?
 
 ## Step 4: Clean up tmp files
-rm GRIB*
+#rm GRIB*
 
-echo "Pressure files ungribbed"
+#echo "Pressure files ungribbed"

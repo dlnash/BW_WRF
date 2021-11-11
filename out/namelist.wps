@@ -1,7 +1,7 @@
 &share
  wrf_core = 'ARW',
  max_dom  = 2,
- start_date = '2010-02-05_00:00:00', '2010-02-05_00:00:00',
+ start_date = '2010-02-03_00:00:00', '2010-02-03_00:00:00',
  end_date   = '2010-02-09_00:00:00', '2010-02-09_00:00:00',
  interval_seconds = 3600,
  io_form_geogrid = 2,
@@ -12,13 +12,13 @@
  parent_grid_ratio =   1, 3,
  i_parent_start    =   1, 247,
  j_parent_start    =   1, 62,
- e_we              = , 1,
- e_sn              = , ,
+ e_we              = 927, 1855,
+ e_sn              = 494, 928,
  geog_data_res     = 'default', 'default',
  dx = 9000,
  dy = 9000,
  map_proj = mercator,
- ref_lat   =  32.5,
+ ref_lat   =  35.0,
  ref_lon   =  77.5,
  truelat1  =  30.0,
  geog_data_path = '/u/eot/dlnash/scratch/WRF_WPS_build_4.3/WPS_GEOG'
@@ -26,11 +26,11 @@
 
 &ungrib
  out_format = 'WPS',
- prefix = '/u/eot/dlnash/scratch/data/wrf/20211022_case/IntermediateData/ungrib/ERA5_sfc',
+ prefix = '/u/eot/dlnash/scratch/data/wrf/20211026_case/IntermediateData/ungrib/ERA5_sfc',
 /
 
 &metgrid
- fg_name = '/u/eot/dlnash/scratch/data/wrf/20211022_case/IntermediateData/ungrib/ERA5_prs','/u/eot/dlnash/scratch/data/wrf/20211022_case/IntermediateData/ungrib/ERA5_sfc',
- opt_output_from_metgrid_path = '/u/eot/dlnash/scratch/data/wrf/20211022_case/IntermediateData/metgrid/',
+ fg_name = '/u/eot/dlnash/scratch/data/wrf/20211026_case/IntermediateData/ungrib/ERA5_prs','/u/eot/dlnash/scratch/data/wrf/20211026_case/IntermediateData/ungrib/ERA5_sfc',
+ opt_output_from_metgrid_path = '/u/eot/dlnash/scratch/data/wrf/20211026_case/IntermediateData/metgrid/',
  io_form_metgrid = 2, 
 /
