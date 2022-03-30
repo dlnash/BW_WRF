@@ -1,0 +1,10 @@
+TACC: job 3971888 execution at: Tue Jan 25 16:38:01 CST 2022
+TACC: running on node c202-034
+TACC: local (compute node) DCV port is 8443
+TACC: got login node DCV port 49402
+TACC: Created reverse ports on Frontera logins
+TACC: Your DCV session is now running!
+TACC: To connect to your DCV session, please point a modern web browser to:
+TACC:          https://frontera.tacc.utexas.edu:49402
+TACC: closing DCV session
+TACC: job 3971888 execution finished at: Tue Jan 25 18:37:07 CST 2022
