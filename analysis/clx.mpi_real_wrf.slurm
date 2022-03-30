@@ -24,8 +24,8 @@
 #----------------------------------------------------
 
 #SBATCH -J real_mptest1           # Job name
-#SBATCH -o real_mptest1o%j        # Name of stdout output file
-#SBATCH -e real_mptest1.e%j       # Name of stderr error file
+#SBATCH -o rsl.o%j                # Name of stdout output file
+#SBATCH -e rsl.e%j                # Name of stderr error file
 #SBATCH -p normal                 # Queue (partition) name
 #SBATCH -N 40                     # Total # of nodes 
 #SBATCH --ntasks-per-node 32      # MPI tasks per node
