@@ -1,0 +1,260 @@
+#!/bin/bash
+#
+#-----------------------------------------------------------------------------
+# This Frontera job script is designed to create a DCV session on 
+# Frontera nodes through the SLURM batch system, and to fail over to VNC if no DCV license 
+# is available. Once the job is scheduled, check the output of your job (which by default is
+# stored in your working directory in a file named dcvserver.out)
+# and it will tell you the port number that has been setup for you so
+# that you can attach via a modern web browser to any Frontera login 
+# node (e.g., frontera.tacc.utexas.edu). 
+#
+# WARNING: DO NOT RENAME THE JOB. SLURM DEPENDS ON THE JOB NAME 'dcvserver' 
+# TO CONFIGURE THE SYSTEM PROPERLY. IF YOU RENAME THE JOB, DCV WILL NOT WORK.
+#
+# Note that for security, DCV traffic is encoded by TLS via secure web
+# connections. Once you connect, you should see a single xterm running 
+# which you can use to launch any X application (e.g. Paraview or VisIt) 
+#
+# Note: you can fine tune the SLURM submission variables below as
+# needed.  Typical items to change are the runtime limit, location of
+# the job output, and the allocation project to submit against (it is
+# commented out for now, but is required if you have multiple
+# allocations).  
+#
+# DCV dynamically adjusts the underlying desktop to match the window resolution
+# on your client. You can specify a static resolution through the DCV client
+# interface once your connection is established.
+#
+# To submit the job, issue: "sbatch /share/doc/slurm/job.dcv" 
+#
+# For more information, please consult the User Guide at: 
+#
+# https://portal.tacc.utexas.edu/user-guides/frontera
+#-----------------------------------------------------------------------------
+#
+#SBATCH -J dcvserver                  # Job name
+#SBATCH -o dcvserver.out              # Name of stdout output file (%j expands to jobId)
+#SBATCH -p development                    # Queue name
+#SBATCH -N 1                          # Total number of nodes requested (68 cores/node)
+#SBATCH -n 1                          # Total number of mpi tasks requested
+#SBATCH -t 02:00:00                   # Run time (hh:mm:ss) - 4 hours
+
+#--------------------------------------------------------------------------
+# ---- You normally should not need to edit anything below this point -----
+#--------------------------------------------------------------------------
+#
+# last update: pnav 20180703
+
+echo "TACC: job $SLURM_JOB_ID execution at: `date`"
+
+# our node name
+NODE_HOSTNAME=`hostname -s`
+echo "TACC: running on node $NODE_HOSTNAME"
+
+# confirm DCV server is alive
+SERVER_TYPE="DCV"
+DCV_SERVER_UP=`systemctl is-active dcvserver`
+if [ $DCV_SERVER_UP != "active" ]; then
+  echo "TACC:"
+  echo "TACC: ERROR - could not confirm dcvserver active, systemctl returned '$DCV_SERVER_UP'"
+  echo "TACC: ERROR - Please submit a consulting ticket at the TACC user portal"
+  echo "TACC: ERROR - https://portal.tacc.utexas.edu/tacc-consulting/-/consult/tickets/create"
+  echo "TACC:"
+  echo "TACC: job $SLURM_JOB_ID execution finished at: `date`"
+  exit 1
+fi 
+
+# create an X startup file in /tmp
+# source xinitrc-common to ensure xterms can be made
+# then source the user's xstartup if it exists
+XSTARTUP="/tmp/dcv-startup-$USER"
+cat <<- EOF > $XSTARTUP
+#!/bin/sh
+
+unset SESSION_MANAGER
+unset DBUS_SESSION_BUS_ADDRESS
+. /etc/X11/xinit/xinitrc-common 
+EOF
+# if [ -x $HOME/.vnc/xstartup ]; then
+#  cat $HOME/.vnc/xstartup >> $XSTARTUP
+#else 
+  echo "exec startxfce4" >> $XSTARTUP 
+#fi
+chmod a+rx $XSTARTUP
+
+# if X0 socket exists, then DCV will use a higher X display number and ruin our day
+# therefore, cowardly bail out and appeal to an admin to fix the problem
+if [ -f /tmp/.X11-unix/X0 ]; then
+  echo "TACC:"
+  echo "TACC: ERROR - X0 socket already exists. DCV script will fail."
+  echo "TACC: ERROR - Please submit a consulting ticket at the TACC user portal"
+  echo "TACC: ERROR - https://portal.tacc.utexas.edu/tacc-consulting/-/consult/tickets/create"
+  echo "TACC:"
+  echo "TACC: job $SLURM_JOB_ID execution finished at: `date`"
+  exit 1
+fi
+
+# create DCV session
+DCV_HANDLE="$USER-session"
+dcv create-session --init=$XSTARTUP $DCV_HANDLE
+if ! `dcv list-sessions | grep -q $USER`; then
+  echo "TACC:"
+  echo "TACC: WARNING - could not find a DCV session for $USER"
+  echo "TACC: WARNING - This could be because all DCV licenses are in use."
+  echo "TACC: WARNING - Failing over to VNC session."
+  echo "TACC: "
+  echo "TACC: If you rarely receive a DCV session using this script, "
+  echo "TACC: please submit a consulting ticket at the TACC user portal:"
+  echo "TACC: https://portal.tacc.utexas.edu/tacc-consulting/-/consult/tickets/create"
+  echo "TACC: "
+
+  SERVER_TYPE="VNC"
+  VNCSERVER_BIN=`which vncserver`
+  echo "TACC: using default VNC server $VNCSERVER_BIN"
+  # Check whether a vncpasswd file exists.  If not, complain and exit.
+  if [ \! -e $HOME/.vnc/passwd ] ; then
+    echo "TACC: "
+    echo "TACC: ERROR - You must run 'vncpasswd' once before launching a VNC session"
+    echo "TACC: ERROR - Please run 'vncpasswd' from the command line and relaunch the job"
+    echo "TACC: ERROR - Note you will use that 6-8 char PIN to connect to your VNC session"
+    echo "TACC: "
+    echo "TACC: job $SLURM_JOB_ID execution finished at: `date`"
+    exit 1
+  fi
+
+  # launch VNC session
+  VNC_DISPLAY=`$VNCSERVER_BIN $@ 2>&1 | grep desktop | awk -F: '{print $3}'`
+  echo "TACC: got VNC display :$VNC_DISPLAY"
+
+  if [ x$VNC_DISPLAY == "x" ]; then
+    echo "TACC: "
+    echo "TACC: ERROR - could not find display created by vncserver: $VNCSERVER"
+    echo "TACC: ERROR - Please submit a consulting ticket at the TACC user portal:"
+    echo "TACC: ERROR - https://portal.tacc.utexas.edu/tacc-consulting/-/consult/tickets/create"
+    echo "TACC: "
+    echo "TACC: job $SLURM_JOB_ID execution finished at: `date`"
+    exit 1
+  fi
+fi
+
+if [ "x${SERVER_TYPE}" == "xDCV" ]; then
+  LOCAL_PORT=8443  # default DCV port
+  DISPLAY=":0"
+elif [ "x${SERVER_TYPE}" == "xVNC" ]; then
+  LOCAL_PORT=`expr 5900 + $VNC_DISPLAY`
+  DISPLAY=":${VNC_DISPLAY}"
+else
+  echo "TACC: "
+  echo "TACC: ERROR - unknown server type '${SERVER_TYPE}'"
+  echo "TACC: Please submit a consulting ticket at the TACC user portal"
+  echo "TACC: https://portal.tacc.utexas.edu/tacc-consulting/-/consult/tickets/create"
+  echo "TACC:"
+  echo "TACC: job $SLURM_JOB_ID execution finished at: `date`"
+  exit 1
+fi
+echo "TACC: local (compute node) ${SERVER_TYPE} port is $LOCAL_PORT"
+
+
+LOGIN_PORT=`echo $NODE_HOSTNAME | perl -ne 'print (($2+1).$3.$1) if /c\d(\d\d)-(\d)(\d\d)/;'`
+if `echo ${NODE_HOSTNAME} | grep -q c2`; then
+    # on a c200 node, bump the login port 
+    LOGIN_PORT=$(($LOGIN_PORT + 36000))
+fi
+echo "TACC: got login node ${SERVER_TYPE} port $LOGIN_PORT"
+
+# create reverse tunnel port to login nodes.  Make one tunnel for each login so the user can just
+# connect to frontera.tacc
+for i in `seq 4`; do
+    ssh -q -f -g -N -R $LOGIN_PORT:$NODE_HOSTNAME:$LOCAL_PORT login$i
+done
+echo "TACC: Created reverse ports on Frontera logins"
+
+echo "TACC: Your ${SERVER_TYPE} session is now running!"
+if [ "x${SERVER_TYPE}" == "xDCV" ]; then
+  echo "TACC: To connect to your ${SERVER_TYPE} session, please point a modern web browser to:"
+  echo "TACC:          https://frontera.tacc.utexas.edu:$LOGIN_PORT"
+elif [ "x${SERVER_TYPE}" == "xVNC" ]; then
+  echo "TACC: To connect via VNC client:  SSH tunnel port $LOGIN_PORT to frontera.tacc.utexas.edu:$LOGIN_PORT"
+  echo "TACC:                             Then connect to localhost:$LOGIN_PORT"
+else
+  # we should never get this message since we just checked this at LOCAL_PORT
+  echo "TACC: "
+  echo "TACC: ERROR - unknown server type '${SERVER_TYPE}'"
+  echo "TACC: Please submit a consulting ticket at the TACC user portal"
+  echo "TACC: https://portal.tacc.utexas.edu/tacc-consulting/-/consult/tickets/create"
+  echo "TACC:"
+  echo "TACC: job $SLURM_JOB_ID execution finished at: `date`"
+  exit 1
+fi
+
+# Warn the user when their session is about to close
+# see if the user set their own runtime
+#TACC_RUNTIME=`qstat -j $JOB_ID | grep h_rt | perl -ne 'print $1 if /h_rt=(\d+)/'`  # qstat returns seconds
+#TACC_RUNTIME=`squeue -l -j $SLURM_JOB_ID | grep $SLURM_QUEUE | awk '{print $7}'` # squeue returns HH:MM:SS
+TACC_RUNTIME=`squeue -j $SLURM_JOB_ID -h --format '%l'`
+if [ x"$TACC_RUNTIME" == "x" ]; then
+	TACC_Q_RUNTIME=`sinfo -p $SLURM_QUEUE | grep -m 1 $SLURM_QUEUE | awk '{print $3}'`
+	if [ x"$TACC_Q_RUNTIME" != "x" ]; then
+		# pnav: this assumes format hh:dd:ss, will convert to seconds below
+		#       if days are specified, this won't work
+		TACC_RUNTIME=$TACC_Q_RUNTIME
+	fi
+fi
+
+#if [ x"$TACC_RUNTIME" != "x" ]; then
+  # there's a runtime limit, so warn the user when the session will die
+  # give 5 minute warning for runtimes > 5 minutes
+#        H=`echo $TACC_RUNTIME | awk -F: '{print $1}'`
+#        M=`echo $TACC_RUNTIME | awk -F: '{print $2}'`
+#        S=`echo $TACC_RUNTIME | awk -F: '{print $3}'`
+#        if [ "x$S" != "x" ]; then
+            # full HH:MM:SS present
+#            H=$(($H * 3600))
+#            M=$(($M * 60))
+#            TACC_RUNTIME_SEC=$(($H + $M + $S))
+#        elif [ "x$M" != "x" ]; then
+            # only HH:MM present, treat as MM:SS
+#            H=$(($H * 60))
+#            TACC_RUNTIME_SEC=$(($H + $M))
+#        else
+#            TACC_RUNTIME_SEC=$S
+#        fi
+        
+#  if [ $TACC_RUNTIME_SEC -gt 300 ]; then
+#    TACC_RUNTIME_SEC=`expr $TACC_RUNTIME_SEC - 300`
+#    sleep $TACC_RUNTIME_SEC && echo "TACC: $USER's $SERVER_TYPE session will end in 5 minutes.  Please save your work now." | wall &
+#  fi
+#fi
+
+
+# run an xterm for the user; execution will hold here
+export DISPLAY
+xterm -r -ls -geometry 80x24+10+10 -title '*** Exit this window to kill your $SERVER_TYPE server ***'
+
+# job is done!
+
+echo "TACC: closing ${SERVER_TYPE} session"
+if [ "x${SERVER_TYPE}" == "xDCV" ]; then
+  dcv close-session ${DCV_HANDLE}
+elif [ "x${SERVER_TYPE}" == "xVNC" ]; then
+  vncserver -kill ${DISPLAY}
+else
+  # we should never get this message since we just checked this at LOCAL_PORT
+  echo "TACC: "
+  echo "TACC: ERROR - unknown server type '${SERVER_TYPE}'"
+  echo "TACC: Please submit a consulting ticket at the TACC user portal"
+  echo "TACC: https://portal.tacc.utexas.edu/tacc-consulting/-/consult/tickets/create"
+  echo "TACC:"
+  echo "TACC: job $SLURM_JOB_ID execution finished at: `date`"
+  exit 1
+fi
+ 
+
+# wait a brief moment so vncserver can clean up after itself
+sleep 1
+
+# remove X11 sockets so DCV will find :0 next time
+find /tmp/.X11-unix -user $USER -exec rm -f '{}' \;
+
+echo "TACC: job $SLURM_JOB_ID execution finished at: `date`"

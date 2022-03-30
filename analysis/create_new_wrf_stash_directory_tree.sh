@@ -6,7 +6,7 @@
 #
 ######################################################################
 
-CASE_NAME="20211006_case"
+CASE_NAME="20220330_case"
 cd ~/DATA_WRF/
 
 mkdir -p ${CASE_NAME}/{InputData/{ERA5_sfc,ERA5_prs},IntermediateData/{geogrid,ungrib,metgrid,real},AnalysisData,ErrOutput/{WPS,WRF,REAL}}
