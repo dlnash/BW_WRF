@@ -27,8 +27,8 @@
 #SBATCH -o rsl.o%j                # Name of stdout output file
 #SBATCH -e rsl.e%j                # Name of stderr error file
 #SBATCH -p normal                 # Queue (partition) name
-#SBATCH -N 40                     # Total # of nodes 
-#SBATCH --ntasks-per-node 32      # MPI tasks per node
+#SBATCH -N 50                     # Total # of nodes 
+#SBATCH --ntasks-per-node 36      # MPI tasks per node
 ## #SBATCH -n 1280                   # Total # of mpi tasks
 #SBATCH -t 08:00:00               # Run time (hh:mm:ss)
 #SBATCH --mail-type=all           # Send email at begin and end of job
@@ -38,6 +38,9 @@
 # Any other commands must follow all #SBATCH directives...
 module load netcdf
 export NETCDF=${TACC_NETCDF_DIR}
+# these two stack settings are essential for use with Intel-compiled code
+ulimit -s unlimited
+export OMP_STACKSIZE=2G
 
 # Launch MPI code... 
 # ibrun ./myprogram         # Use ibrun instead of mpirun or mpiexec
