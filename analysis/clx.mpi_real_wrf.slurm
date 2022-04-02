@@ -27,8 +27,8 @@
 #SBATCH -o rsl.o%j                # Name of stdout output file
 #SBATCH -e rsl.e%j                # Name of stderr error file
 #SBATCH -p normal                 # Queue (partition) name
-#SBATCH -N 50                     # Total # of nodes 
-#SBATCH --ntasks-per-node 36      # MPI tasks per node
+#SBATCH -N 44                     # Total # of nodes 
+#SBATCH --ntasks-per-node 32      # MPI tasks per node
 ## #SBATCH -n 1280                   # Total # of mpi tasks
 #SBATCH -t 08:00:00               # Run time (hh:mm:ss)
 #SBATCH --mail-type=all           # Send email at begin and end of job
@@ -38,9 +38,24 @@
 # Any other commands must follow all #SBATCH directives...
 module load netcdf
 export NETCDF=${TACC_NETCDF_DIR}
+## set paths for libraries
+export DIR=/work2/08540/dlnash/frontera/WRF_WPS_build_4.2/LIBRARIES
+export CC=gcc
+export CXX=g++
+export FC=gfortran
+export FCFLAGS=-m64
+export F77=gfortran
+export FFLAGS=-m64
+export JASPERLIB=$DIR/grib2/lib
+export JASPERINC=$DIR/grib2/include
+export LDFLAGS=-L$DIR/grib2/lib
+export CPPFLAGS=-I$DIR/grib2/include
+export PATH=$DIR/mpich/bin:$PATH
+
 # these two stack settings are essential for use with Intel-compiled code
 ulimit -s unlimited
-export OMP_STACKSIZE=2G
+export WRFIO_NCD_LARGE_FILE_SUPPORT=1
+export OMP_STACKSIZE=6G
 
 # Launch MPI code... 
 # ibrun ./myprogram         # Use ibrun instead of mpirun or mpiexec
@@ -62,10 +77,10 @@ cp wrfbdy_d01 $INTDIR_NAME
 cp wrfinput_d* $INTDIR_NAME
 cp wrflowinp_d* $INTDIR_NAME
 
-# ### Make error directory and move error files
-# ERRDIR_NAME=$DATA_DIR'ErrOutput/REAL/'%j
-# mkdir $ERRDIR_NAME
-# mv rsl* $ERRDIR_NAME
+### Make error directory and move error files
+ERRDIR_NAME=$DATA_DIR'ErrOutput/REAL/'$SLURM_JOB_ID
+mkdir $ERRDIR_NAME
+mv rsl* $ERRDIR_NAME
 
 
 ###############
@@ -77,6 +92,6 @@ cp wrflowinp_d* $INTDIR_NAME
 ## Clean up files
 # echo "wrf complete, cleaning up files..."
 # cp namelist.input $DATA_DIR
-# ERRDIR_NAME=$DATADIR'ErrOutput/WRF/'%j
+# ERRDIR_NAME=$DATADIR'ErrOutput/WRF/'$SLURM_JOB_ID
 # mkdir $ERRDIR_NAME
 # mv rsl* $ERRDIR_NAME
