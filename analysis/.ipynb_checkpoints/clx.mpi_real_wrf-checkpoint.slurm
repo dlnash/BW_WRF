@@ -27,9 +27,9 @@
 #SBATCH -o rsl.o%j                # Name of stdout output file
 #SBATCH -e rsl.e%j                # Name of stderr error file
 #SBATCH -p normal                 # Queue (partition) name
-#SBATCH -N 44                     # Total # of nodes 
+#SBATCH -N 50                     # Total # of nodes 
 #SBATCH --ntasks-per-node 32      # MPI tasks per node
-## #SBATCH -n 1280                   # Total # of mpi tasks
+## #SBATCH -n 32                   # Total # of mpi tasks
 #SBATCH -t 08:00:00               # Run time (hh:mm:ss)
 #SBATCH --mail-type=all           # Send email at begin and end of job
 #SBATCH -A ATM21023               # Project/Allocation name (req'd if you have more than 1)
@@ -92,6 +92,6 @@ mv rsl* $ERRDIR_NAME
 ## Clean up files
 # echo "wrf complete, cleaning up files..."
 # cp namelist.input $DATA_DIR
-# ERRDIR_NAME=$DATADIR'ErrOutput/WRF/'$SLURM_JOB_ID
+# ERRDIR_NAME=$DATA_DIR'ErrOutput/WRF/4281800'$SLURM_JOB_ID
 # mkdir $ERRDIR_NAME
 # mv rsl* $ERRDIR_NAME
